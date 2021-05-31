@@ -1,13 +1,21 @@
 project('saru-list', 'c',
   version : '0.1.0',
-  default_options : ['warning_level=3', c_std='c11', 
-    'c_link_args=-fsanitize=address,undefined'])
+  license: 'MIT',
+  default_options : ['warning_level=3', 'c_std=c11', 
+    'c_link_args=-lasan'])
 
-src = ['src/saru_list.c']
 inc = include_directories('inc')
+subdir('src')
 
-exe = executable('saru_list',
-  src,
-  install : true)
+install_headers('inc/saru-dlist.h', subdir: 'saru_list')
 
-test('basic', exe)
+pkg = import('pkgconfig')
+pkg.generate(
+  libraries: libsaru_list,
+  subdirs: 'inc',
+  version: meson.project_version(),
+  name: 'libsaru_list',
+  filebase: 'saru_list',
+  description: 'A simple C library containing buffer data structures. A module of the "saru-" family of libraries.'
+)
+
