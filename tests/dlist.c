@@ -58,15 +58,57 @@ void test_pushback(void)
     sdlist_destroy(&list);
 }
 
+void test_pushback_types(void)
+{
+    SDLIST_INIT(list, NULL);
+    int n = 1;
+    char s = '2';
+    float f = 3.0;
+    struct data_t {
+        int n1;
+        int n2;
+    };
+    struct data_t data;
+    data.n1 = 4;
+    data.n2 = 4;
+
+    int out1 = 0;
+    char out2 = '0';
+    float out3 = 0.0;
+    struct data_t out4;
+
+    sdlist_pushback(list, n);
+    sdlist_pushback(list, s);
+    sdlist_pushback(list, f);
+    sdlist_pushback(list, data);
+
+    SDNode *itr = sdlist_begin(list);
+    out1 = *sdlist_at(int, itr);
+    itr = sdlist_next(itr);
+    out2 = *sdlist_at(char, itr);
+    itr = sdlist_next(itr);
+    out3 = *sdlist_at(float, itr);
+    itr = sdlist_next(itr);
+    out4 = *sdlist_at(struct data_t, itr);
+
+    TEST_ASSERT_EQUAL(n, out1);
+    TEST_ASSERT_EQUAL(s, out2);
+    TEST_ASSERT_EQUAL(f, out3);
+    TEST_ASSERT_EQUAL(data.n1, out4.n1);
+    TEST_ASSERT_EQUAL(data.n2, out4.n2);
+
+    sdlist_destroy(&list);
+}
+
 void test_pushfront(void)
 {
     SDLIST_INIT(list, NULL);
     int in[] = { 1, 2, 3};
     int out[] = { 0, 0, 0};
 
-    sdlist_pushback(list, in[0]);
-    sdlist_pushback(list, in[1]);
-    sdlist_pushback(list, in[2]);
+    sdlist_pushfront(list, in[0]);
+    sdlist_pushfront(list, in[1]);
+    sdlist_pushfront(list, in[2]);
 
     SDNode *itr = sdlist_begin(list);
     for (int i = 0; itr != NULL; itr = sdlist_next(itr), ++i)
@@ -85,4 +127,6 @@ int main(void)
     RUN_TEST(test_init);
     RUN_TEST(test_to_node);
     RUN_TEST(test_pushback);
+    RUN_TEST(test_pushback_types);
+    RUN_TEST(test_pushfront);
 }

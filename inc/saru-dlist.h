@@ -37,7 +37,8 @@ struct node *sdlist_next(struct node *node);
 #define sdlist_pushfront(list, item) \
     _sdlist_pushfront(&list, _sdlist_to_node((void *)&item))
 
-#define sdlist_at(type, itr) (type *)itr->data
+/* for strings pass in char and do not dereference */
+#define sdlist_at(type, itr) ((type *)itr->data)
 
 /* private functions */
 struct node *_sdlist_to_node(void *data);
