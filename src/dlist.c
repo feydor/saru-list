@@ -16,6 +16,12 @@ sdlist_init(struct saru_dlist *dll, void (*destroy)(void *data))
     dll->destroy = destroy;
 }
 
+struct node *
+sdlist_next(struct node *node)
+{
+    return node->next;
+}
+
 /**
  * destroys the entire list, calling the destroy function
  * on each element if it was passed into the init function
@@ -36,7 +42,7 @@ sdlist_destroy(struct saru_dlist *dll)
  * caller should check for NULL pointer
  */
 struct node *
-sdlist_to_node(void *data)
+_sdlist_to_node(void *data)
 {
     assert(data && "Is verified by the caller.");
     struct node *new_node = (struct node *)malloc(sizeof(struct node));
@@ -46,12 +52,6 @@ sdlist_to_node(void *data)
         new_node->next = new_node->prev = NULL;
     }
     return new_node;
-}
-
-void
-_sdlist_next(struct node *node)
-{
-    node = node->next;
 }
 
 /**
@@ -116,6 +116,7 @@ _sdlist_insertafter(struct saru_dlist *dll, struct node *node,
     return 1;
 }
 
+/* the passed in node becomes the new head */
 int
 _sdlist_inserthead(struct saru_dlist *dll, struct node *node)
 {
@@ -130,6 +131,7 @@ _sdlist_inserthead(struct saru_dlist *dll, struct node *node)
     return 0;
 }
 
+/* the passed in node becomes the new tail */
 int
 _sdlist_inserttail(struct saru_dlist *dll, struct node *node)
 {
@@ -139,7 +141,7 @@ _sdlist_inserttail(struct saru_dlist *dll, struct node *node)
         dll->head = node;
         node->prev = node->next = NULL;
     } else {
-        return _sdlist_insertbefore(dll, dll->tail, node);
+        return _sdlist_insertafter(dll, dll->tail, node);
     }
     return 0;
 }

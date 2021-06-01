@@ -26,7 +26,7 @@ void test_to_node(void)
 {
     SDLIST_INIT(list, NULL);
     char str[] = "a string";
-    SDNode *n1 = sdlist_to_node((void *)str);
+    SDNode *n1 = sdlist_to_node(str);
     
     TEST_ASSERT_EQUAL(str, (char *)n1->data);
     TEST_ASSERT_EQUAL(NULL, n1->next);
@@ -38,20 +38,43 @@ void test_to_node(void)
 void test_pushback(void)
 {
     SDLIST_INIT(list, NULL);
-    int in[] = { 1, 2, 3 };
-    int out[] = { 0, 0, 0};
+    int in[] = { 1, 2, 3 , 4};
+    int out[] = { 0, 0, 0, 0};
 
-    sdlist_pushfront(list, in[0]);
-    sdlist_pushfront(list, in[1]);
-    sdlist_pushfront(list, in[2]);
+    sdlist_pushback(list, in[0]);
+    sdlist_pushback(list, in[1]);
+    sdlist_pushback(list, in[2]);
+    sdlist_pushback(list, in[3]);
 
     SDNode *itr = sdlist_begin(list);
-    for (int i = 0; itr != NULL; itr = itr->next, ++i)
+    for (int i = 0; itr != NULL; itr = sdlist_next(itr), ++i)
         out[i] = *sdlist_at(int, itr); 
     
-    printf("%d\n", out[0]);
-    printf("%d\n", out[1]);
-    printf("%d\n", out[2]);
+    TEST_ASSERT_EQUAL(1, out[0]);
+    TEST_ASSERT_EQUAL(2, out[1]);
+    TEST_ASSERT_EQUAL(3, out[2]);
+    TEST_ASSERT_EQUAL(4, out[3]);
+
+    sdlist_destroy(&list);
+}
+
+void test_pushfront(void)
+{
+    SDLIST_INIT(list, NULL);
+    int in[] = { 1, 2, 3};
+    int out[] = { 0, 0, 0};
+
+    sdlist_pushback(list, in[0]);
+    sdlist_pushback(list, in[1]);
+    sdlist_pushback(list, in[2]);
+
+    SDNode *itr = sdlist_begin(list);
+    for (int i = 0; itr != NULL; itr = sdlist_next(itr), ++i)
+        out[i] = *sdlist_at(int, itr);
+
+    TEST_ASSERT_EQUAL(3, out[0]);
+    TEST_ASSERT_EQUAL(2, out[1]);
+    TEST_ASSERT_EQUAL(1, out[2]);
 
     sdlist_destroy(&list);
 }

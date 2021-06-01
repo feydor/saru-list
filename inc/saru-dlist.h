@@ -17,8 +17,8 @@ typedef struct saru_dlist {
 
 /* public interface */
 void sdlist_init(struct saru_dlist *dll, void (*destroy)(void *data));
-struct node *sdlist_to_node(void *data);
 void sdlist_destroy(struct saru_dlist *dll);
+struct node *sdlist_next(struct node *node);
 
 #define sdlist_size(list) (list.size)
 #define sdlist_begin(list) list.head
@@ -28,19 +28,19 @@ void sdlist_destroy(struct saru_dlist *dll);
     struct saru_dlist list; \
     sdlist_init(&list, destroy)
 
+#define sdlist_to_node(item) \
+    _sdlist_to_node((void *)&item)
+
 #define sdlist_pushback(list, item) \
-    _sdlist_pushback(&list, sdlist_to_node((void *)&item))
+    _sdlist_pushback(&list, _sdlist_to_node((void *)&item))
 
 #define sdlist_pushfront(list, item) \
-    _sdlist_pushfront(&list, sdlist_to_node((void *)&item))
-
-#define sdlist_next(itr) \
-    _sdlist_next(itr)
+    _sdlist_pushfront(&list, _sdlist_to_node((void *)&item))
 
 #define sdlist_at(type, itr) (type *)itr->data
 
 /* private functions */
-void _sdlist_next(struct node *node);
+struct node *_sdlist_to_node(void *data);
 int _sdlist_pushfront(struct saru_dlist *dll, struct node *node);
 int _sdlist_pushback(struct saru_dlist *dll, struct node *node);
 int _sdlist_insertafter(struct saru_dlist *dll, struct node *node, 
