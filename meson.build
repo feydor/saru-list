@@ -6,6 +6,7 @@ project('saru-list', 'c',
 
 inc = include_directories('inc')
 subdir('src')
+subdir('tests')
 
 install_headers('inc/saru-dlist.h', subdir: 'saru_list')
 

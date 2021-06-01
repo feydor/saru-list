@@ -16,25 +16,22 @@ int main(int argc, char **argv) {
 
     char str1[] = "HELLOWORLD!";
     char str2[] = "GOODBYEWORLD!";
-    struct node *n1 = sdlist_to_node((void *)str1);
-    struct node *n2 = sdlist_to_node((void *)str2);
-
-    sdlist_append(&list, n1);
-    sdlist_append(&list, n2);
-    sdlist_append(&list, sdlist_to_node((void *)"STRING3HERE"));
+    sdlist_pushback(list, str1);
+    sdlist_pushback(list, "STRING3HERE");
+    sdlist_pushfront(list, str2);
 
     printf("first traversal:\n");
-    struct node *curr = list.head;
+    struct node *curr = sdlist_begin(list);
     while (curr != NULL) {
         printf("%s\n", (char *)curr->data);
         curr = curr->next; 
     }
 
-    sdlist_remove(&list, n1);
+    // _sdlist_remove(&list, n1);
 
     printf("second traversal:\n");
     for (curr = list.head; curr != NULL; curr = curr->next)
-        printf("%s\n", (char *)curr->data);
+        printf("%s\n", sdlist_at(char, curr));
 
     sdlist_destroy(&list);
 

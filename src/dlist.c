@@ -17,6 +17,21 @@ sdlist_init(struct saru_dlist *dll, void (*destroy)(void *data))
 }
 
 /**
+ * destroys the entire list, calling the destroy function
+ * on each element if it was passed into the init function
+ */
+void 
+sdlist_destroy(struct saru_dlist *dll)
+{
+    struct node *curr = dll->tail;
+    struct node *temp = NULL;
+    for (;curr != NULL; curr = temp->prev) {
+        temp = curr;
+        _sdlist_remove(dll, curr);
+    }
+}
+
+/**
  * allocates and returns a new node with the passed-in data
  * caller should check for NULL pointer
  */
@@ -33,18 +48,34 @@ sdlist_to_node(void *data)
     return new_node;
 }
 
+void
+_sdlist_next(struct node *node)
+{
+    node = node->next;
+}
+
 /**
  * appends a node to the tail of the list
  * returns 0 on success, -1 otherwise
  */
 int
-sdlist_append(struct saru_dlist *dll, struct node *node)
+_sdlist_pushback(struct saru_dlist *dll, struct node *node)
 {
-    return sdlist_inserttail(dll, node);   
+    return _sdlist_inserttail(dll, node);   
+}
+
+/**
+ * appends a node to the head of the list
+ * returns 0 on success, -1 otherwise
+ */
+int
+_sdlist_pushfront(struct saru_dlist *dll, struct node *node)
+{
+    return _sdlist_inserthead(dll, node);   
 }
 
 int
-sdlist_insertbefore(struct saru_dlist *dll, struct node *node,
+_sdlist_insertbefore(struct saru_dlist *dll, struct node *node,
                                         struct node *new_node)
 {
     assert(node && new_node && "Are verified by the caller.");
@@ -65,7 +96,7 @@ sdlist_insertbefore(struct saru_dlist *dll, struct node *node,
 }
 
 int
-sdlist_insertafter(struct saru_dlist *dll, struct node *node,
+_sdlist_insertafter(struct saru_dlist *dll, struct node *node,
                                        struct node *new_node)
 {
     assert(node && new_node && "Are verified by the caller.");
@@ -86,7 +117,7 @@ sdlist_insertafter(struct saru_dlist *dll, struct node *node,
 }
 
 int
-sdlist_inserthead(struct saru_dlist *dll, struct node *node)
+_sdlist_inserthead(struct saru_dlist *dll, struct node *node)
 {
     /* check for empty list and add node */
     if (dll->head == NULL) {
@@ -94,13 +125,13 @@ sdlist_inserthead(struct saru_dlist *dll, struct node *node)
         dll->tail = node;
         node->prev = node->next = NULL;
     } else {
-        return sdlist_insertbefore(dll, dll->head, node);
+        return _sdlist_insertbefore(dll, dll->head, node);
     }
     return 0;
 }
 
 int
-sdlist_inserttail(struct saru_dlist *dll, struct node *node)
+_sdlist_inserttail(struct saru_dlist *dll, struct node *node)
 {
     /* check for empty list and add node */
     if (dll->tail == NULL) {
@@ -108,7 +139,7 @@ sdlist_inserttail(struct saru_dlist *dll, struct node *node)
         dll->head = node;
         node->prev = node->next = NULL;
     } else {
-        return sdlist_insertbefore(dll, dll->tail, node);
+        return _sdlist_insertbefore(dll, dll->tail, node);
     }
     return 0;
 }
@@ -117,7 +148,7 @@ sdlist_inserttail(struct saru_dlist *dll, struct node *node)
  * removes a node, works with a 1 element list (sets head and tail to NULL)
  */
 void
-sdlist_remove(struct saru_dlist *dll, struct node *node)
+_sdlist_remove(struct saru_dlist *dll, struct node *node)
 {
     /* first node on list */
     if (node->prev == NULL)
@@ -138,13 +169,3 @@ sdlist_remove(struct saru_dlist *dll, struct node *node)
     dll->size--;
 }
 
-void 
-sdlist_destroy(struct saru_dlist *dll)
-{
-    struct node *curr = dll->tail;
-    struct node *temp = NULL;
-    for (;curr != NULL; curr = temp->prev) {
-        temp = curr;
-        sdlist_remove(dll, curr);
-    }
-}
