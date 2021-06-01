@@ -19,6 +19,7 @@ typedef struct saru_dlist {
 void sdlist_init(struct saru_dlist *dll, void (*destroy)(void *data));
 void sdlist_destroy(struct saru_dlist *dll);
 struct node *sdlist_next(struct node *node);
+struct node *sdlist_prev(struct node *node);
 
 #define sdlist_size(list) (list.size)
 #define sdlist_begin(list) list.head
@@ -40,8 +41,9 @@ struct node *sdlist_next(struct node *node);
 /* for strings pass in char and do not dereference */
 #define sdlist_at(type, itr) ((type *)itr->data)
 
+#define sdlist_pop(list) _sdlist_pop(&list)
+
 /* private functions */
-struct node *_sdlist_to_node(void *data);
 int _sdlist_pushfront(struct saru_dlist *dll, struct node *node);
 int _sdlist_pushback(struct saru_dlist *dll, struct node *node);
 int _sdlist_insertafter(struct saru_dlist *dll, struct node *node, 
@@ -52,6 +54,8 @@ int _sdlist_inserthead(struct saru_dlist *dll, struct node *node);
 int _sdlist_inserttail(struct saru_dlist *dll, struct node *node);
 
 void _sdlist_remove(struct saru_dlist *dll, struct node *node);
+void _sdlist_pop(struct saru_dlist *dll);
+struct node *_sdlist_to_node(void *data);
 
 #endif
 

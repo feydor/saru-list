@@ -41,10 +41,8 @@ void test_pushback(void)
     int in[] = { 1, 2, 3 , 4};
     int out[] = { 0, 0, 0, 0};
 
-    sdlist_pushback(list, in[0]);
-    sdlist_pushback(list, in[1]);
-    sdlist_pushback(list, in[2]);
-    sdlist_pushback(list, in[3]);
+    for (size_t i = 0; i < (sizeof(in) / sizeof(in[0])); ++i)
+        sdlist_pushback(list, in[i]);
 
     SDNode *itr = sdlist_begin(list);
     for (int i = 0; itr != NULL; itr = sdlist_next(itr), ++i)
@@ -106,9 +104,8 @@ void test_pushfront(void)
     int in[] = { 1, 2, 3};
     int out[] = { 0, 0, 0};
 
-    sdlist_pushfront(list, in[0]);
-    sdlist_pushfront(list, in[1]);
-    sdlist_pushfront(list, in[2]);
+    for (size_t i = 0; i < (sizeof(in) / sizeof(in[0])); ++i)
+        sdlist_pushfront(list, in[i]);
 
     SDNode *itr = sdlist_begin(list);
     for (int i = 0; itr != NULL; itr = sdlist_next(itr), ++i)
@@ -121,6 +118,28 @@ void test_pushfront(void)
     sdlist_destroy(&list);
 }
 
+void test_pop(void)
+{
+    SDLIST_INIT(list, NULL);
+    int in[] = { 1, 2, 3 };
+    int out[] = { 0, 0, 0 };
+
+    for (size_t i = 0; i < (sizeof(in) / sizeof(in[0])); ++i)
+        sdlist_pushback(list, in[i]);
+
+    sdlist_pop(list);
+
+    SDNode *itr = sdlist_begin(list);
+    for (int i = 0; itr != NULL; itr = sdlist_next(itr), ++i)
+        out[i] = *sdlist_at(int, itr);
+
+    TEST_ASSERT_EQUAL(1, out[0]);
+    TEST_ASSERT_EQUAL(2, out[1]);
+    TEST_ASSERT_EQUAL(0, out[2]);
+
+    sdlist_destroy(&list);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -129,4 +148,5 @@ int main(void)
     RUN_TEST(test_pushback);
     RUN_TEST(test_pushback_types);
     RUN_TEST(test_pushfront);
+    RUN_TEST(test_pop);
 }

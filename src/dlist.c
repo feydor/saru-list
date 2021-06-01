@@ -22,6 +22,12 @@ sdlist_next(struct node *node)
     return node->next;
 }
 
+struct node *
+sdlist_prev(struct node *node)
+{
+    return node->prev;
+}
+
 /**
  * destroys the entire list, calling the destroy function
  * on each element if it was passed into the init function
@@ -35,6 +41,14 @@ sdlist_destroy(struct saru_dlist *dll)
         temp = curr;
         _sdlist_remove(dll, curr);
     }
+}
+
+void
+_sdlist_pop(struct saru_dlist *dll)
+{
+    if (dll->size == 0)
+        return;
+    _sdlist_remove(dll, dll->tail);
 }
 
 /**
