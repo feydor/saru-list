@@ -81,3 +81,22 @@ sdlist_inserttail(struct saru_dlist *dll, struct node *node)
         sdlist_insertbefore(dll, dll->tail, node);
     }
 }
+
+/**
+ * removes a node, works with a 1 element list (sets head and tail to NULL)
+ */
+void
+sdlist_remove(struct saru_dlist *dll, struct node *node)
+{
+    /* first node on list */
+    if (node->prev == NULL)
+        dll->head = node->next;
+    else
+        node->prev->next = node->next;
+
+    /* last node on list */
+    if (node->next == NULL)
+        dll->tail = node->prev;
+    else
+        node->next->prev = node->prev;
+}

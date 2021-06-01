@@ -24,5 +24,7 @@ void sdlist_insertbefore(struct saru_dlist *dll, struct node *node,
 void sdlist_inserthead(struct saru_dlist *dll, struct node *node);
 void sdlist_inserttail(struct saru_dlist *dll, struct node *node);
 
+void sdlist_remove(struct saru_dlist *dll, struct node *node);
+
 #endif
 
