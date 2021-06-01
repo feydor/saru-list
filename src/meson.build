@@ -1,4 +1,4 @@
-src = ['main.c', 'saru_list.c']
+src = ['main.c', 'dlist.c']
 
 libsaru_list = library(
   'saru-list',

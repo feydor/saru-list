@@ -11,14 +11,17 @@ int main(int argc, char **argv) {
     }
     printf("This is project %s.\n", PROJECT_NAME);
 
-    struct saru_dll list;
-    sdll_init(&list);
+    struct saru_dlist list;
+    sdlist_init(&list, NULL);
 
     char str[] = "HELLOWORLD!";
-    struct node node;
-    node.data = (void *)str;
+    struct node n1;
+    struct node n2;
+    n1.data = (void *)str;
+    n2.data = (void *)str;
 
-    sdll_inserthead(&list, &node);
+    sdlist_inserthead(&list, &n1);
+    sdlist_inserthead(&list, &n2);
 
     struct node *curr = list.head;
 

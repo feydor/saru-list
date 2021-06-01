@@ -8,21 +8,21 @@ struct node {
     void *data;
 };
 
-struct saru_dll {
+struct saru_dlist {
     int size;
     struct node *head;
     struct node *tail;
+    void (*destroy)(void *data);
 };
 
 /* function prototypes */
-void sdll_init(struct saru_dll *dll);
-// void sdll_free(struct saru_dll *dll);
-void sdll_insertafter(struct saru_dll *dll, struct node *node, 
-                                            struct node *new);
-void sdll_insertbefore(struct saru_dll *dll, struct node *node,
-                                             struct node *new);
-void sdll_inserthead(struct saru_dll *dll, struct node *n);
-void sdll_inserttail(struct saru_dll *dll, struct node *n);
+void sdlist_init(struct saru_dlist *dll, void (*destroy)(void *data));
+void sdlist_insertafter(struct saru_dlist *dll, struct node *node, 
+                                                struct node *new_node);
+void sdlist_insertbefore(struct saru_dlist *dll, struct node *node,
+                                                 struct node *new_node);
+void sdlist_inserthead(struct saru_dlist *dll, struct node *node);
+void sdlist_inserttail(struct saru_dlist *dll, struct node *node);
 
 #endif
 
